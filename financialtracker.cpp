@@ -37,18 +37,23 @@ void enterexpense(){
 	std::cout<<"\n\n\n********************************************\n\n\n";
 	std::ofstream file("financial.txt"); //Opening file, creates new file if not found
 	if(file.is_open()){
-		short counter; //tracks number of expense via increment in the for loop
-		float user_expense; //Takes user exepense
-		float total_expense; //Sum of user_expense
-		std::cout<<"Enter expense for "<<monthyear()[0]<<" "<<monthyear()[1]<< " Enter 0.00 to end.";
-		for(int i =1;user_expense != 0.00;i++){
-			std::cout<<"\nExpense "<<i<<": ";
+		short counter=1; //tracks number of expense via increment in the for loop
+		float user_expense = 0.0f; //Takes user exepense
+		float total_expense = 0.0f; //To store Sum of user_expense
+		auto date = monthyear();
+		std::cout<<"Enter expense for "<<date[0]<<" "<<date[1]<< " Enter 0.000 to end.";
+		file<< "Month: "<<date[0]<<" "<<date[1]<<"\n";
+		while(true){
+			std::cout<<"\nExpense "<<counter<<": ";
 			std::cin>>user_expense;
+			if(user_expense == 0.000){ //If user enters 0.000, subtracts 1 from counter and stops loop
+				counter-=1;
+				break;
+			}			
 			file<<user_expense<<'\n';
 			total_expense += user_expense;
 			counter++;
 		}
-		file<< "Month: "<<monthyear()[0]<<" "<<monthyear()[1]<<"\n";
 		file<< "Number of expenditure: "<<counter<<"\n";
 		file<< "Total expenditure: "<<total_expense<<"\n";
 		file.close();
@@ -67,10 +72,9 @@ void displayexpense(){
 			std::cout<<"\nNo expense record found in the file\n\n";
 		}
 		else{
-			std::getline(file,label,':');
-			file>>month;
-			std::getline(file,label);
-			file>>year;
+			std::getline(file,label,':'); //To read Month and year
+			file>>month>>year;
+			
 			file.ignore(1000,'\n');
 
 			std::getline(file,label,':'); //To extract value after the delimeter ':'
@@ -81,7 +85,7 @@ void displayexpense(){
 			std::getline(file,label,':');
 			file>>total_expense;
 			
-			std::cout<<"Month: "<<month<<" Year: "<<year;
+			std::cout<<"Month: "<<month<<" Year: "<<year<<'\n';
 			std::cout<<"Number of expenditure: "<< expense_count<<'\n';
 			std::cout<<"Total Expenditure: "<< total_expense<<'\n'<<std::endl;
 		}
